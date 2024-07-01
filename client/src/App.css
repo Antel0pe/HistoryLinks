@@ -1,0 +1,29 @@
+#root {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+  }
+
+#instructions{
+    text-align: center;
+}
+
+#container{
+    width: 80%;
+}
+
+#graphView{
+    min-height: 75vh;
+    margin: 2.5%;
+    border: solid 5px whitesmoke;
+    background-color: whitesmoke;
+}
+
+
+
+
+
