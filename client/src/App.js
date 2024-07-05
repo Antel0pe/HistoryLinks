@@ -24,6 +24,19 @@ function App() {
         allowInvalidContainer: true
     });
 
+    function updateText() {
+        let text = [...selectedNodesLeftOfRoot.slice(1)].reverse().concat(selectedNodesRightOfRoot).map((num) => {
+            return graph.getNodeAttribute(num, 'label');
+        }).join(' -> ');
+
+        console.log('UPDATED: ' + [...selectedNodesLeftOfRoot.slice(1)]);
+
+        let currentPath = document.getElementById('currentPath');
+        currentPath.innerHTML = text;
+
+        
+    }
+
     // useEffect(() => {
     //     console.log('USE EFFECT triggerin')
     //     let left = [...selectedNodesLeftOfRoot].reverse().map((n) => graph.getNodeAttribute(n, 'label'));
@@ -161,6 +174,7 @@ function App() {
 
             generateAdjacentNodes(attr.num, attr.x, attr.y, areRightNodesPresent, adjacentXCoord);
             colorSurroundingBlueNodes(attr.num);
+            updateText();
         });
     }
 
@@ -221,6 +235,7 @@ function App() {
                 graph={graph}>
                 
             </CurrentPath>
+            <text id='currentPath'></text>
         </div>
     );
 }
