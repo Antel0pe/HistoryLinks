@@ -16,10 +16,11 @@
 }
 
 #graphView{
-    min-height: 75vh;
     margin: 2.5%;
-    border: solid 5px whitesmoke;
-    background-color: whitesmoke;
+    border: solid 5px yellow;
+    width: 75vw; 
+    height: 60vh;
+
 }
 
 

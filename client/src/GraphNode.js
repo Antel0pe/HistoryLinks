@@ -1,4 +1,4 @@
-function graphNode(label, nodeNum, x, y, size, color){
+function newGraphNode(label, nodeNum, x, y, size, color){
     let node = {
         label: label,
         nodeNum: nodeNum,
@@ -11,4 +11,4 @@ function graphNode(label, nodeNum, x, y, size, color){
     return node;
 }
 
-export default graphNode;
+export default newGraphNode;
