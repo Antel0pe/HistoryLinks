@@ -246,14 +246,17 @@ function App() {
             <UserInput handleSubmittedUserArticle={handleSubmittedUserArticle}></UserInput>
 
             {submittedArticleTitle !== null && 
-                <SigmaContainer id='graphView' graph={DirectedGraph} settings={sigmaSettings}>
+                <SigmaContainer id='sigmaContainer' graph={DirectedGraph} settings={sigmaSettings}>
+                    
                     <WikipediaGraph rootNodeName={submittedArticleTitle} leftList={selectedLeftNodes} setLeftList={setSelectedLeftNodes} rightList={selectedRightNodes} setRightList={setSelectedRightNodes}></WikipediaGraph>
+
+                    <CurrentPath leftList={selectedLeftNodes} rightList={selectedRightNodes} ></CurrentPath>
+                    
+
                 </SigmaContainer>
             }
 
-            {selectedLeftNodes.length !== 0 && selectedRightNodes.length !== 0 &&
-                <CurrentPath leftList={selectedLeftNodes} rightList={selectedRightNodes} ></CurrentPath>
-            }
+            
 
         </div>
     );

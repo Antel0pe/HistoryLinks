@@ -11,17 +11,13 @@
     text-align: center;
 }
 
-/* #container{
-    width: 100%;
-} */
-
-#graphView{
+#sigmaContainer{
     margin: 2.5%;
     border: solid 5px yellow;
     width: 75vw; 
     height: 60vh;
-
 }
+
 
 
 
