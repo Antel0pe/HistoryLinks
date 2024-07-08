@@ -8,7 +8,7 @@ import { FC, useEffect, useMemo, useState } from "react";
 import { DirectedGraph } from "graphology"; 
 import _, { random, sample } from 'underscore';
 import graphNode from './GraphNode';
-import { Events } from './GraphEvents';
+import { Events } from './GraphAdjacentNodes';
 import CurrentPath from './CurrentPath';
 import UserInput from './UserInput';
 import WikipediaGraph from './WikipediaGraph';
@@ -16,13 +16,15 @@ import { MultiDirectedGraph } from "graphology";
 import "@react-sigma/core/lib/react-sigma.min.css";
 
 function App() {
-    const [userArticleTitle, setUserArticleTitle] = useState(null);
+    
     const [submittedArticleTitle, setSubmittedArticleTitle] = useState(null);
 
     const [selectedLeftNodes, setSelectedLeftNodes] = useState([]);
     const [selectedRightNodes, setSelectedRightNodes] = useState([]);
-
-
+    
+    // useEffect(() => {
+    //     setSelectedRightNodes([3, 4]);
+    // }, [])
     
 
 
@@ -33,19 +35,14 @@ function App() {
     // let selectedNodesLeftOfRoot = []
     // let selectedNodesRightOfRoot = []
 
-    function setRightListHelp(l) {
-        console.log('even here it blank? ');
-        console.log(selectedRightNodes);
-        setSelectedRightNodes([...selectedRightNodes, l]);
-    }
-
     const sigmaSettings = ({
         enableEdgeEvents: true,
         allowInvalidContainer: true
     });
 
-    function handleSubmittedUserArticle() {
-        setSubmittedArticleTitle(userArticleTitle);
+    function handleSubmittedUserArticle(title) {
+        console.log('submitted ' + title);
+        setSubmittedArticleTitle(title);
     }
 
     // function updateText() {
@@ -245,31 +242,8 @@ function App() {
 
     return (
         <div id='container'>
-            {/* <div id='instructions'>
-                <h3 id='heading'>HistoryLinks</h3>
-                <p>Explore how a wikipedia page about history is linked to/by other history articles on wikipedia</p>
-                <input id='userInputArticle' placeholder='Enter the name of a wikipedia history article' size={40}></input>
-                <button id='button' onClick={createRootNode}>Explore!</button>
-            </div> */}
-            <UserInput setUserArticleTitle={setUserArticleTitle} handleSubmittedUserArticle={handleSubmittedUserArticle}></UserInput>
-            
-            {/* {submittedArticleTitle !== null &&
-                <div id='graphView'>
-                    <SigmaContainer graph={MultiDirectedGraph} settings={sigmaSettings}>
-                        <WikipediaGraph rootNodeName={submittedArticleTitle}></WikipediaGraph>
-                    </SigmaContainer>
-                </div>
-            } */}
 
-            {/* <SigmaContainer id='graphView' graph={DirectedGraph} settings={sigmaSettings}>
-                <WikipediaGraph rootNodeName={submittedArticleTitle}></WikipediaGraph>
-            </SigmaContainer> */}
-            
-            {/* <div id='graphView'>
-                <SigmaContainer graph={MultiDirectedGraph} settings={sigmaSettings}>
-                        <WikipediaGraph rootNodeName={submittedArticleTitle}></WikipediaGraph>
-                </SigmaContainer>
-            </div> */}
+            <UserInput handleSubmittedUserArticle={handleSubmittedUserArticle}></UserInput>
 
             {submittedArticleTitle !== null && 
                 <SigmaContainer id='graphView' graph={DirectedGraph} settings={sigmaSettings}>
@@ -281,16 +255,6 @@ function App() {
                 <CurrentPath leftList={selectedLeftNodes} rightList={selectedRightNodes} ></CurrentPath>
             }
 
-            
-            {/* <SigmaContainer graph={graph} settings={sigmaSettings} id='graphView'>
-            </SigmaContainer>
-            <CurrentPath
-                leftList={selectedNodesLeftOfRoot}
-                rightList={selectedNodesRightOfRoot}
-                graph={graph}>
-                
-            </CurrentPath>
-            <text id='currentPath'></text> */}
         </div>
     );
 }

@@ -11,9 +11,9 @@
     text-align: center;
 }
 
-#container{
-    width: 80%;
-}
+/* #container{
+    width: 100%;
+} */
 
 #graphView{
     margin: 2.5%;

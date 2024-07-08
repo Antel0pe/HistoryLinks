@@ -6,7 +6,7 @@ export default function CurrentPath({ leftList, rightList }) {
     const [currentPathText, setCurrentPathText] = useState('');
 
     useEffect(() => {
-        let text = leftList.splice(1).reverse().concat(rightList);
+        let text = [...leftList].slice(1).reverse().concat(rightList).join(',');
         setCurrentPathText(text);
 
     }, [leftList.join(), rightList.join()])
