@@ -68,3 +68,9 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+### Tradeoffs Made
+- React components should be pure but performance implications of copying graph instances of potentially millions of entities perhaps is not worth it
+- Mongo vs SQL of data storage
+- Schemas of storage, 2 column rows of source and target article vs source with list of all titles referenced
