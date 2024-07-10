@@ -21,10 +21,14 @@ export class GraphAdjacentNodes{
         
     }
 
+    resetGraphNodeNum() {
+        this.graphNodeNum = 0;
+    }
+
     createRootNode(graph, articleTitle, setSelectedLeftNodes, setSelectedRightNodes) {
         let rootNode = newGraphNode(articleTitle, this.graphNodeNum++, 0, 0, 10, 'blue');
-        graph.addNode(rootNode.nodeNum, rootNode);
-        console.log('added node ' + this.graphNodeNum);
+        graph.updateNode(rootNode.nodeNum, attr => rootNode);
+        console.log('added node ' + rootNode.nodeNum);
     
         setSelectedLeftNodes([rootNode.nodeNum]);
         setSelectedRightNodes([rootNode.nodeNum]);
@@ -185,8 +189,13 @@ export class GraphAdjacentNodes{
     
     
         for (let i = 0; i < adjacentNodes.length; i++) {
-            graph.addNode(adjacentNodes[i].nodeNum, adjacentNodes[i]);
-            graph.addEdge(parentNodeNum, adjacentNodes[i].nodeNum);
+            console.log('creating edge between parent ' + node.label + ' and child ' + adjacentNodes[i].label);
+            graph.updateNode(adjacentNodes[i].nodeNum, attr => adjacentNodes[i]);
+            graph.updateEdge(parentNodeNum, adjacentNodes[i].nodeNum, attr => { 
+                return {
+                    color: attr.color ? attr.color : 'grey'
+                }
+            });
         }
     }
     

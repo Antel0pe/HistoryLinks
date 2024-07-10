@@ -1,6 +1,7 @@
 import { useRegisterEvents, useSigma } from "@react-sigma/core";
 import { FC, useEffect, useState } from "react";
 import { GraphAdjacentNodes } from "./GraphAdjacentNodes";
+import { DirectedGraph } from "graphology";
 
 
 
@@ -26,22 +27,31 @@ export default function WikipediaGraph({ rootNodeName, leftList, setLeftList, ri
 
     const registerEvents = useRegisterEvents();
     const sigma = useSigma();
-    const graph = sigma.getGraph();
+    let graph = sigma.getGraph();
 
     const [graphNodes, setGraphNodes] = useState(new GraphAdjacentNodes());
+    // let graphNodes = new GraphAdjacentNodes();
 
     useEffect(() => {
-
         // Create the graph
         console.log('creating on mount');
         // let rootNode = newGraphNode(rootNodeName, graphNodeNum++, 0, 0, 10, 'blue');
         // graph.addNode(rootNode.nodeNum, rootNode);
-        
+        sigma.setGraph(new DirectedGraph());
+        graph = sigma.getGraph();
+        graphNodes.resetGraphNodeNum();
 
         setLeftList([rootNodeName]);
-        setRightList([rootNodeName]);   
-        
+        setRightList([rootNodeName]);  
+
         graphNodes.createRootNode(graph, rootNodeName, setLeftList, setRightList);
+        // graph = sigma.getGraph();
+        
+        // setGraphNodes(new GraphAdjacentNodes(), () => {
+        //     graphNodes.createRootNode(graph, rootNodeName, setLeftList, setRightList);
+        // });
+        
+        
 
         // let n = graphNode(rootNodeName, graphNodeNum, 0, 0, 10, 'blue');
         // graph.addNode(graphNodeNum++, n);
