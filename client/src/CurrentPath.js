@@ -9,12 +9,12 @@ export default function CurrentPath({ leftList, rightList }) {
     const [currentPathText, setCurrentPathText] = useState('');
 
     useEffect(() => {
-        console.log('current lists are ');
-        console.log(leftList);
-        console.log(rightList);
-        console.log('graph deets');
-        console.log('num nodes ' + graph.order);
-        console.log('num edges ' + graph.size);
+        // console.log('current lists are ');
+        // console.log(leftList);
+        // console.log(rightList);
+        // console.log('graph deets');
+        // console.log('num nodes ' + graph.order);
+        // console.log('num edges ' + graph.size);
         let text = [...leftList].slice(1).reverse().concat(rightList)
             .map((num) => graph.getNodeAttribute(num, 'label')).join(',');
         setCurrentPathText(text);

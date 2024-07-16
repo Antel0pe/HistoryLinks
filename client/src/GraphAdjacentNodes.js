@@ -34,8 +34,8 @@ export class GraphAdjacentNodes{
         setSelectedLeftNodes([rootNode.nodeNum]);
         setSelectedRightNodes([rootNode.nodeNum]);
     
-        this.generateAdjacentNodes(graph, rootNode.nodeNum, -1);
-        this.generateAdjacentNodes(graph, rootNode.nodeNum, 1);
+        this.generateAdjacentNodes(graph, rootNode.nodeNum, -1, rootNode.label);
+        this.generateAdjacentNodes(graph, rootNode.nodeNum, 1, rootNode.label);
         
     }
 
@@ -130,23 +130,29 @@ export class GraphAdjacentNodes{
             this.recordSelectedNode(graph, node.nodeNum, node.x, [rightList, setRightList]);
         }
     
-        this.generateAdjacentNodes(graph, node.nodeNum, node.x);
+        this.generateAdjacentNodes(graph, node.nodeNum, node.x, node.label);
         this.colorEdgesSurroundingBlueNodes(graph, node.nodeNum);
     }
     
-    generateAdjacentNodes(graph, parentNodeNum, nodeX) {
+    generateAdjacentNodes(graph, parentNodeNum, nodeX, label) {
         let xCoordAdjustment = 0;
+
         if (nodeX < 0) {
             xCoordAdjustment = -1;
-        } else if (nodeX > 0) {
-            xCoordAdjustment = 1;
-        }
 
-        axios.get('http://localhost:5000/api/test')
+            axios.get('http://localhost:5000/api/inlinks/' + label)
                 .then(res => {
                     this.generateAdjacentNodesWithXCoord(graph, parentNodeNum, xCoordAdjustment, res.data);
-                })
-    
+                });
+        } else if (nodeX > 0) {
+            xCoordAdjustment = 1;
+
+            axios.get('http://localhost:5000/api/outlinks/' + label)
+                .then(res => {
+                    this.generateAdjacentNodesWithXCoord(graph, parentNodeNum, xCoordAdjustment, res.data);
+                });
+        }
+
     }
     
     generateAdjacentNodesWithXCoord(graph, parentNodeNum, xCoordAdjustment, adjacentNodeNames) {
@@ -178,8 +184,8 @@ export class GraphAdjacentNodes{
     
     colorEdgesSurroundingBlueNodes(graph, nodeKey) {
         graph.filterEdges(nodeKey, (e, _, source, target, sourceAttributes, targetAttributes) => {
-            return source === nodeKey && targetAttributes.color === 'blue' ||
-                target === nodeKey && sourceAttributes.color === 'blue';
+            return (source === nodeKey && targetAttributes.color === 'blue') ||
+                (target === nodeKey && sourceAttributes.color === 'blue');
         }).forEach((e) => graph.setEdgeAttribute(e, 'color', 'blue'));
     }
     

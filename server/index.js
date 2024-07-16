@@ -1,21 +1,20 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const routes = require("./routes");
 var cors = require('cors');
+const connectDB = require("./db");
+const dotenv = require("dotenv").config();
 
 
-mongoose
-    .connect("mongodb://127.0.0.1:27017/test")
-    .then(() => {
-        const app = express();
+const app = express();
 
-        app.use(cors());
-        app.use(express.json());
-        app.use(express.urlencoded({ extended: true }));
+connectDB();
 
-        app.use("/api", routes);
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-        app.listen(5000, () => {
-            console.log("Server has started!");
-        })
-    });
+app.use("/api", routes);
+
+app.listen(process.env.PORT, () => {
+    console.log("Server has started!");
+})

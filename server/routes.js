@@ -22,10 +22,14 @@ router.get("/outlinks/:articleTitle", async (req, res) => {
 
     console.log('Looking up pages referenced by ' + articleTitle);
 
-    const outlinks = await WikipediaReference
-        .find({ title: articleTitle });
+    let outlinks = await WikipediaReference
+        .find({ title: articleTitle }, 'linked_article_title');
+        
+    outlinks = outlinks.map(a => a.linked_article_title);
     
     console.log('found ' + outlinks);
+
+    outlinks = tempPadOutValues(outlinks);
     
     res.send(outlinks);
 });
@@ -36,14 +40,24 @@ router.get("/inlinks/:articleTitle", async (req, res) => {
 
     console.log('Looking up pages referencing ' + articleTitle);
 
-    const inlinks = await WikipediaReference
-        .find({ linked_article_title: articleTitle });
+    let inlinks = await WikipediaReference
+        .find({ linked_article_title: articleTitle }, 'title');
     
+    inlinks = inlinks.map(a => a.title);
+         
     console.log('found ' + inlinks);
+
+    inlinks = tempPadOutValues(inlinks);
     
     res.send(inlinks);
 });
 
+
+// Always return array with 3 values - pad spaces
+function tempPadOutValues(arr) {
+    return arr.concat(Array(3).fill('placeholder value'))
+        .slice(0, 3);
+}
 
 
 module.exports = router;

@@ -13,5 +13,5 @@ const WikipediaReferenceSchema = new mongoose.Schema(
     },
 );
  
-const WikipediaReference = mongoose.model("Wikipediareference", WikipediaReferenceSchema);
+const WikipediaReference = mongoose.model("Reference", WikipediaReferenceSchema);
 module.exports = WikipediaReference;
