@@ -140,14 +140,14 @@ export class GraphAdjacentNodes{
         if (nodeX < 0) {
             xCoordAdjustment = -1;
 
-            axios.get('http://localhost:5000/api/inlinks/' + label)
+            axios.get(process.env.REACT_APP_BACKEND_URL + '/api/inlinks/' + label)
                 .then(res => {
                     this.generateAdjacentNodesWithXCoord(graph, parentNodeNum, xCoordAdjustment, res.data);
                 });
         } else if (nodeX > 0) {
             xCoordAdjustment = 1;
 
-            axios.get('http://localhost:5000/api/outlinks/' + label)
+            axios.get(process.env.REACT_APP_BACKEND_URL + '/api/outlinks/' + label)
                 .then(res => {
                     this.generateAdjacentNodesWithXCoord(graph, parentNodeNum, xCoordAdjustment, res.data);
                 });
