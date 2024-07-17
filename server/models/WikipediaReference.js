@@ -6,10 +6,10 @@ const WikipediaReferenceSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        linked_article_title: {
+        linked_article_titles: [{
             type: String,
             required: true,
-        },
+        }],
     },
 );
  

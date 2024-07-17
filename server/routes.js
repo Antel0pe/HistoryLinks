@@ -23,11 +23,11 @@ router.get("/outlinks/:articleTitle", async (req, res) => {
     console.log('Looking up pages referenced by ' + articleTitle);
 
     let outlinks = await WikipediaReference
-        .find({ title: articleTitle }, 'linked_article_title');
+        .findOne({ title: articleTitle }, 'linked_article_titles');
         
-    outlinks = outlinks.map(a => a.linked_article_title);
-    
-    console.log('found ' + outlinks);
+    outlinks = outlinks === null ? [] : outlinks.linked_article_titles;
+
+    console.log('found outlinks:' + JSON.stringify(outlinks));
 
     outlinks = tempPadOutValues(outlinks);
     
@@ -41,7 +41,7 @@ router.get("/inlinks/:articleTitle", async (req, res) => {
     console.log('Looking up pages referencing ' + articleTitle);
 
     let inlinks = await WikipediaReference
-        .find({ linked_article_title: articleTitle }, 'title');
+        .find({ linked_article_titles: articleTitle }, 'title');
     
     inlinks = inlinks.map(a => a.title);
          
