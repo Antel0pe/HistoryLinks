@@ -15,6 +15,7 @@ import WikipediaGraph from './WikipediaGraph';
 import { MultiDirectedGraph } from "graphology";
 import "@react-sigma/core/lib/react-sigma.min.css";
 import axios from "axios";
+import { Analytics } from "@vercel/analytics/react"
 
 function App() {
     
@@ -39,6 +40,7 @@ function App() {
 
     return (
         <div id='container'>
+            <Analytics />
 
             <UserInput handleSubmittedUserArticle={handleSubmittedUserArticle}></UserInput>
 
