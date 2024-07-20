@@ -16,6 +16,7 @@ import { MultiDirectedGraph } from "graphology";
 import "@react-sigma/core/lib/react-sigma.min.css";
 import axios from "axios";
 import { Analytics } from "@vercel/analytics/react"
+import { ListBox } from 'primereact/listbox';
 
 function App() {
     
@@ -35,6 +36,15 @@ function App() {
         setSubmittedArticleTitle(title);
 
     }
+
+    const [selectedCity, setSelectedCity] = useState(null);
+    const cities = [
+        { name: 'New York', code: 'NY' },
+        { name: 'Rome', code: 'RM' },
+        { name: 'London', code: 'LDN' },
+        { name: 'Istanbul', code: 'IST' },
+        { name: 'Paris', code: 'PRS' }
+    ];
 
 
 
@@ -56,8 +66,9 @@ function App() {
                 </SigmaContainer>
             }
 
-
-            
+            {/* <div className="card flex justify-content-center">  
+                <ListBox value={selectedCity} onChange={(e) => setSelectedCity(e.value)} options={cities} optionLabel="name" style={{ background: 'red' }} />
+            </div>  */}
 
         </div>
     );

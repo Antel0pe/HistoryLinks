@@ -12,7 +12,7 @@ export class GraphAdjacentNodes{
     }
 
     createRootNode(graph, articleTitle, setSelectedLeftNodes, setSelectedRightNodes) {
-        let rootNode = newGraphNode(articleTitle, this.graphNodeNum++, 0, 0, 10, 'blue');
+        let rootNode = newGraphNode(articleTitle, this.graphNodeNum++, 0, 0, 10, 'blue', 0);
         graph.updateNode(rootNode.nodeNum, attr => rootNode);
         console.log('added node ' + rootNode.nodeNum);
     
@@ -71,25 +71,25 @@ export class GraphAdjacentNodes{
 
     // it is only legal to select a node if a node in the previous layer is selected
     // valid path must always exist
-    isLegalToSelectNode(graph, xVal, nodeNum, leftList, rightList) {    
+    isLegalToSelectNode(graph, node, leftList, rightList) {    
         let selectedNodeList = null;
-        if (xVal === 0) {
+        if (node.x === 0) {
             return false;
-        } else if (xVal > 0) {
+        } else if (node.x > 0) {
             selectedNodeList = rightList;
-        } else if (xVal < 0) {
+        } else if (node.x < 0) {
             selectedNodeList = leftList;
         }
-        console.log('xCoord is ' + xVal);
+        console.log('node layer is ' + node.layer);
         console.log(selectedNodeList);
         console.log('length of list: ' + selectedNodeList.length);
 
-        let idx = Math.abs(xVal);
+        let idx = Math.abs(node.layer);
 
         if ((idx - 1) < selectedNodeList.length) {
             let prevNode = selectedNodeList[idx - 1];
             let prevNodeColor = graph.getNodeAttribute(prevNode, 'color');
-            let doesEdgeExistFromPrevLayer = graph.hasEdge(prevNode, nodeNum);
+            let doesEdgeExistFromPrevLayer = graph.hasEdge(prevNode, node.nodeNum);
             
             console.log('is valid to select node? prev color: ' + prevNodeColor + ' and has edge to prev node: ' + doesEdgeExistFromPrevLayer);
             console.log('prev node is ' + prevNode);
@@ -104,7 +104,7 @@ export class GraphAdjacentNodes{
     clickedNode(graph, nodeNum, [leftList, setLeftList], [rightList, setRightList]) {
         let node = graph.getNodeAttributes(nodeNum);
 
-        if (!this.isLegalToSelectNode(graph, node.x, node.nodeNum, leftList, rightList)) {
+        if (!this.isLegalToSelectNode(graph, node, leftList, rightList)) {
             alert('invalid node to select!');
             return;
         }
@@ -119,7 +119,7 @@ export class GraphAdjacentNodes{
         this.colorEdgesSurroundingBlueNodes(graph, node.nodeNum);
     }
     
-    generateAdjacentNodes(graph, parentNodeNum, nodeX, label) {
+    generateAdjacentNodes(graph, parentNodeNum, nodeX, label, layer) {
         let xCoordAdjustment = 0;
 
         if (nodeX < 0) {
@@ -139,16 +139,32 @@ export class GraphAdjacentNodes{
         }
 
     }
+
+    normalizeSize(arrLength) {
+        let min = 5;
+        let max = 15;
+
+        let size = (0.1*arrLength)/(0.1*arrLength + 100)
+
+        let normalization = (val) => val * (max-min) + min;
+
+        console.log('SIZE OF NODES: ' + normalization(size));
+
+        return normalization(size, min, max);
+    }
     
     generateAdjacentNodesWithXCoord(graph, parentNodeNum, xCoordAdjustment, adjacentNodeNames) {
         let node = graph.getNodeAttributes(parentNodeNum);
     
         let adjacentNodes = [];
     
-        let adjacentX = node.x + xCoordAdjustment*adjacentNodeNames.length;
-        let adjacentY = node.y + Math.floor(adjacentNodeNames.length/2)*10;
+        let adjacentX = node.x + xCoordAdjustment*adjacentNodeNames.length*10;
+        let adjacentY = node.y + Math.floor(adjacentNodeNames.length / 2) * 10;
+        let nodeSize = this.normalizeSize(adjacentNodeNames.length);
+        let layer = node.layer + xCoordAdjustment;
+
         for (let i = 0; i < adjacentNodeNames.length; i++){
-            let newNode = newGraphNode(adjacentNodeNames[i], this.graphNodeNum++, adjacentX, adjacentY - i*10, 10, 'red');
+            let newNode = newGraphNode(adjacentNodeNames[i], this.graphNodeNum++, adjacentX, adjacentY - i*10, nodeSize, 'red', layer);
 
             adjacentNodes.push(newNode);
         }

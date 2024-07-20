@@ -29,18 +29,6 @@ export default function WikipediaGraph({ rootNodeName, leftList, setLeftList, ri
         setRightList([rootNodeName]);  
 
         graphNodes.createRootNode(graph, rootNodeName, setLeftList, setRightList);
-
-        // graph = sigma.getGraph();
-        
-        // setGraphNodes(new GraphAdjacentNodes(), () => {
-        //     graphNodes.createRootNode(graph, rootNodeName, setLeftList, setRightList);
-        // });
-        
-        
-
-        // let n = graphNode(rootNodeName, graphNodeNum, 0, 0, 10, 'blue');
-        // graph.addNode(graphNodeNum++, n);
-
         
     }, []);
     

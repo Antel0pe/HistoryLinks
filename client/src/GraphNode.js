@@ -1,4 +1,4 @@
-function newGraphNode(label, nodeNum, x, y, size, color){
+function newGraphNode(label, nodeNum, x, y, size, color, layer){
     let node = {
         label: label,
         nodeNum: nodeNum,
@@ -6,6 +6,7 @@ function newGraphNode(label, nodeNum, x, y, size, color){
         y: y,
         size: size,
         color: color,
+        layer: layer
     }
 
     return node;
