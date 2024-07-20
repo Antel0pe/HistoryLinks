@@ -1,26 +1,11 @@
 import './App.css';
-import Graph from "graphology";
-import Sigma from "sigma";
-import { FullScreenControl, SigmaContainer, ZoomControl } from "@react-sigma/core";
-import { createNodeImageProgram } from "@sigma/node-image";
-import { FC, useEffect, useMemo, useState } from "react";
-import { DirectedGraph } from "graphology"; 
-import _, { random, sample } from 'underscore';
+import _ from 'underscore';
 import newGraphNode from './GraphNode';
-import { Events } from './GraphAdjacentNodes';
-import CurrentPath from './CurrentPath';
-import UserInput from './UserInput';
-import WikipediaGraph from './WikipediaGraph';
-import { MultiDirectedGraph } from "graphology";
 import axios from "axios";
 
 
 export class GraphAdjacentNodes{
     graphNodeNum = 0;
-
-    constructor() {
-        
-    }
 
     resetGraphNodeNum() {
         this.graphNodeNum = 0;
@@ -159,12 +144,11 @@ export class GraphAdjacentNodes{
         let node = graph.getNodeAttributes(parentNodeNum);
     
         let adjacentNodes = [];
-        // let adjacentNodeNames = this.getAdjacentNodeNames();
     
-        let adjacentX = node.x + xCoordAdjustment;
-        let adjacentY = node.y + 1;
+        let adjacentX = node.x + xCoordAdjustment*adjacentNodeNames.length;
+        let adjacentY = node.y + Math.floor(adjacentNodeNames.length/2)*10;
         for (let i = 0; i < adjacentNodeNames.length; i++){
-            let newNode = newGraphNode(adjacentNodeNames[i], this.graphNodeNum++, adjacentX, adjacentY - i, 10, 'red');
+            let newNode = newGraphNode(adjacentNodeNames[i], this.graphNodeNum++, adjacentX, adjacentY - i*10, 10, 'red');
 
             adjacentNodes.push(newNode);
         }

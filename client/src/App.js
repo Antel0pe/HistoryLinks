@@ -26,7 +26,8 @@ function App() {
 
     const sigmaSettings = ({
         enableEdgeEvents: true,
-        allowInvalidContainer: true
+        allowInvalidContainer: true,
+        itemSizesReference: "positions",
     });
 
     function handleSubmittedUserArticle(title) {

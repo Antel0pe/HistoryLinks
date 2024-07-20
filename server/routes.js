@@ -55,8 +55,11 @@ router.get("/inlinks/:articleTitle", async (req, res) => {
 
 // Always return array with 3 values - pad spaces
 function tempPadOutValues(arr) {
-    return arr.concat(Array(3).fill('placeholder value'))
-        .slice(0, 3);
+    if (arr.length === 0) {
+        return Array(3).fill('placeholder value');
+    } else {
+        return arr;
+    }
 }
 
 

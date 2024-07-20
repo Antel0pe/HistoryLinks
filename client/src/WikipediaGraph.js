@@ -4,24 +4,6 @@ import { GraphAdjacentNodes } from "./GraphAdjacentNodes";
 import { DirectedGraph } from "graphology";
 
 
-
-// function generateAdjacentNodes(graph, nodeNum, graphNodeNum, selectedRightNodes, setSelectedRightNodes) {
-//     let parentNode = graph.getNodeAttributes(nodeNum);
-//     let childNode = newGraphNode(graphNodeNum, graphNodeNum, parentNode.x + 1, parentNode.y, 10, 'blue');
-//     graph.addNode(childNode.nodeNum, childNode);
-
-
-//     setSelectedRightNodes([...selectedRightNodes, childNode.label]);
-// }
-// let graphNodes;
-// function createGraphNodes() {
-//     if (!graphNodes){
-//         graphNodes = new GraphAdjacentNodes();
-//     }
-// }
-
-// const graphNodes = new GraphAdjacentNodes();
-
 export default function WikipediaGraph({ rootNodeName, leftList, setLeftList, rightList, setRightList }) {
     // createGraphNodes();
 
@@ -30,6 +12,8 @@ export default function WikipediaGraph({ rootNodeName, leftList, setLeftList, ri
     let graph = sigma.getGraph();
 
     const [graphNodes, setGraphNodes] = useState(new GraphAdjacentNodes());
+
+
     // let graphNodes = new GraphAdjacentNodes();
 
     useEffect(() => {
@@ -45,6 +29,7 @@ export default function WikipediaGraph({ rootNodeName, leftList, setLeftList, ri
         setRightList([rootNodeName]);  
 
         graphNodes.createRootNode(graph, rootNodeName, setLeftList, setRightList);
+
         // graph = sigma.getGraph();
         
         // setGraphNodes(new GraphAdjacentNodes(), () => {
@@ -70,15 +55,6 @@ export default function WikipediaGraph({ rootNodeName, leftList, setLeftList, ri
             
         });
     }, [registerEvents, JSON.stringify(leftList), JSON.stringify(rightList),]);
-    
-    function incrementList() {
-        setLeftList([...leftList, setLeftList.length + 1]);
-        setRightList([...rightList, setRightList.length + 1]);
-    }
 
-    // return <>
-    //     <button onClick={() => incrementList()}>Click dis</button>
-    
-    // </>
     return null;
 }
