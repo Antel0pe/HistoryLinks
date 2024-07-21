@@ -50,26 +50,29 @@ function App() {
 
 
     return (
-        <div id='container'>
-            <Analytics />
+        <div id='page'>
+            <div id='container'>
+                <Analytics />
 
-            <UserInput handleSubmittedUserArticle={handleSubmittedUserArticle}></UserInput>
+                <UserInput handleSubmittedUserArticle={handleSubmittedUserArticle}></UserInput>
 
-            {submittedArticleTitle !== null && 
-                <SigmaContainer id='sigmaContainer' graph={DirectedGraph} settings={sigmaSettings}>
-                    
-                    <WikipediaGraph rootNodeName={submittedArticleTitle} leftList={selectedLeftNodes} setLeftList={setSelectedLeftNodes} rightList={selectedRightNodes} setRightList={setSelectedRightNodes}></WikipediaGraph>
+                {submittedArticleTitle !== null && 
+                    <SigmaContainer id='sigmaContainer' graph={DirectedGraph} settings={sigmaSettings}>
+                        
+                        <WikipediaGraph rootNodeName={submittedArticleTitle} leftList={selectedLeftNodes} setLeftList={setSelectedLeftNodes} rightList={selectedRightNodes} setRightList={setSelectedRightNodes}></WikipediaGraph>
 
-                    <CurrentPath leftList={selectedLeftNodes} rightList={selectedRightNodes} ></CurrentPath>
-                    
+                        <CurrentPath leftList={selectedLeftNodes} rightList={selectedRightNodes} ></CurrentPath>
+                        
 
-                </SigmaContainer>
-            }
+                    </SigmaContainer>
+                }
 
-            {/* <div className="card flex justify-content-center">  
-                <ListBox value={selectedCity} onChange={(e) => setSelectedCity(e.value)} options={cities} optionLabel="name" style={{ background: 'red' }} />
-            </div>  */}
+            </div>
 
+            <div id='listView'>  
+                <h1>Neighbour List</h1>
+                <ListBox filter  value={selectedCity} onChange={(e) => setSelectedCity(e.value)} options={cities} optionLabel="name"  />
+            </div>
         </div>
     );
 }
