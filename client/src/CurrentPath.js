@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { isNull } from "underscore";
 import { FullScreenControl, SigmaContainer, ZoomControl, useLoadGraph, useRegisterEvents, useSigma } from "@react-sigma/core";
 
-export default function CurrentPath({ leftList, rightList }) {
+export default function CurrentPath({ leftList, rightList, selectedNeighbour, prevNeighbour }) {
     const sigma = useSigma();
     const graph = sigma.getGraph();
 
@@ -20,6 +20,21 @@ export default function CurrentPath({ leftList, rightList }) {
         setCurrentPathText(text);
 
     }, [leftList, rightList])
+
+    useEffect(() => {
+        console.log('selected neighbours:');
+        console.log(selectedNeighbour);
+
+        if (prevNeighbour !== null) {
+            graph.removeNodeAttribute(prevNeighbour.nodeNum, "highlighted");
+        }
+        
+        if (selectedNeighbour !== null) {
+            graph.setNodeAttribute(selectedNeighbour.nodeNum, "highlighted", true);
+        }
+        
+
+    }, [selectedNeighbour])
 
     return <>
         <p>Current Path:</p>

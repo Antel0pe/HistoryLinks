@@ -4,7 +4,7 @@ import { GraphAdjacentNodes } from "./GraphAdjacentNodes";
 import { DirectedGraph } from "graphology";
 
 
-export default function WikipediaGraph({ rootNodeName, leftList, setLeftList, rightList, setRightList }) {
+export default function WikipediaGraph({ rootNodeName, leftList, setLeftList, rightList, setRightList, setClickedNodeNeighbours }) {
     // createGraphNodes();
 
     const registerEvents = useRegisterEvents();
@@ -26,11 +26,37 @@ export default function WikipediaGraph({ rootNodeName, leftList, setLeftList, ri
         graphNodes.resetGraphNodeNum();
 
         setLeftList([rootNodeName]);
-        setRightList([rootNodeName]);  
+        setRightList([rootNodeName]);
 
         graphNodes.createRootNode(graph, rootNodeName, setLeftList, setRightList);
         
     }, []);
+
+    async function onNodeClick(node) {
+        await graphNodes.clickedNode(graph, node, [leftList, setLeftList], [rightList, setRightList]);
+
+        console.log('clicked node neighbours are: ');
+
+        let neighbours = [];
+        if (node.x <= 0) {
+            console.log('looking at inbound');
+            neighbours = graph.reduceInNeighbors(node, (acc, neighbour, attr) => {
+                acc.push(attr);
+                return acc;
+            }, []);
+        } else {
+            console.log('looking at outbound');
+
+            neighbours = graph.reduceOutNeighbors(node, (acc, neighbour, attr) => {
+                acc.push(attr);
+                return acc;
+            }, []);
+        }
+
+        setClickedNodeNeighbours(neighbours);
+        console.log(graph.neighbors(node));
+        console.log(neighbours);
+    }
     
   
     useEffect(() => {
@@ -38,7 +64,7 @@ export default function WikipediaGraph({ rootNodeName, leftList, setLeftList, ri
         registerEvents({
             // node events
             clickNode: (event) => {
-                graphNodes.clickedNode(graph, event.node, [leftList, setLeftList], [rightList, setRightList]);
+                onNodeClick(event.node);
             }
             
         });

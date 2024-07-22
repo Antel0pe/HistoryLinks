@@ -56,14 +56,14 @@ export class GraphAdjacentNodes{
 
     }
 
-    recordSelectedNode(graph, nodeNum, xVal, [selectedNodes, setSelectedNodes]) {
+    recordSelectedNode(graph, nodeNum, nodeLayer, [selectedNodes, setSelectedNodes]) {
         graph.setNodeAttribute(nodeNum, 'color', 'blue');
     
-        let xCoord = Math.abs(xVal);
+        let absNodeLayer = Math.abs(nodeLayer);
     
-        this.deselectNephewNodesOnClick(selectedNodes, xCoord, graph);
+        this.deselectNephewNodesOnClick(selectedNodes, absNodeLayer, graph);
         setSelectedNodes([
-            ...selectedNodes.slice(0, xCoord),
+            ...selectedNodes.slice(0, absNodeLayer),
             nodeNum,
         ]);
     
@@ -101,7 +101,7 @@ export class GraphAdjacentNodes{
         }
     }
 
-    clickedNode(graph, nodeNum, [leftList, setLeftList], [rightList, setRightList]) {
+    async clickedNode(graph, nodeNum, [leftList, setLeftList], [rightList, setRightList]) {
         let node = graph.getNodeAttributes(nodeNum);
 
         if (!this.isLegalToSelectNode(graph, node, leftList, rightList)) {
@@ -110,29 +110,29 @@ export class GraphAdjacentNodes{
         }
     
         if (node.x < 0) {
-            this.recordSelectedNode(graph, node.nodeNum, node.x, [leftList, setLeftList] );
+            this.recordSelectedNode(graph, node.nodeNum, node.layer, [leftList, setLeftList] );
         } else {
-            this.recordSelectedNode(graph, node.nodeNum, node.x, [rightList, setRightList]);
+            this.recordSelectedNode(graph, node.nodeNum, node.layer, [rightList, setRightList]);
         }
     
-        this.generateAdjacentNodes(graph, node.nodeNum, node.x, node.label);
+        await this.generateAdjacentNodes(graph, node.nodeNum, node.x, node.label);
         this.colorEdgesSurroundingBlueNodes(graph, node.nodeNum);
     }
     
-    generateAdjacentNodes(graph, parentNodeNum, nodeX, label, layer) {
+    async generateAdjacentNodes(graph, parentNodeNum, nodeX, label, layer) {
         let xCoordAdjustment = 0;
 
         if (nodeX < 0) {
             xCoordAdjustment = -1;
 
-            axios.get(process.env.REACT_APP_BACKEND_URL + '/api/inlinks/' + label)
+            await axios.get(process.env.REACT_APP_BACKEND_URL + '/api/inlinks/' + label)
                 .then(res => {
                     this.generateAdjacentNodesWithXCoord(graph, parentNodeNum, xCoordAdjustment, res.data);
                 });
         } else if (nodeX > 0) {
             xCoordAdjustment = 1;
 
-            axios.get(process.env.REACT_APP_BACKEND_URL + '/api/outlinks/' + label)
+            await axios.get(process.env.REACT_APP_BACKEND_URL + '/api/outlinks/' + label)
                 .then(res => {
                     this.generateAdjacentNodesWithXCoord(graph, parentNodeNum, xCoordAdjustment, res.data);
                 });
@@ -171,7 +171,6 @@ export class GraphAdjacentNodes{
     
     
         for (let i = 0; i < adjacentNodes.length; i++) {
-            console.log('creating edge between parent ' + node.label + ' and child ' + adjacentNodes[i].label);
             graph.updateNode(adjacentNodes[i].nodeNum, attr => adjacentNodes[i]);
 
             graph.updateEdge(parentNodeNum, adjacentNodes[i].nodeNum, attr => { 

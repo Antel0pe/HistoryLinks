@@ -25,6 +25,10 @@ function App() {
     const [selectedLeftNodes, setSelectedLeftNodes] = useState([]);
     const [selectedRightNodes, setSelectedRightNodes] = useState([]);
 
+    const [prevSelectedNeighbour, setPrevSelectedNeighbour] = useState(null);
+    const [selectedNeighbour, setSelectedNeighbour] = useState(null);
+    const [selectedNodeNeighbours, setSelectedNodeNeighbours] = useState([]);
+
     const sigmaSettings = ({
         enableEdgeEvents: true,
         allowInvalidContainer: true,
@@ -37,16 +41,21 @@ function App() {
 
     }
 
-    const [selectedCity, setSelectedCity] = useState(null);
-    const cities = [
-        { name: 'New York', code: 'NY' },
-        { name: 'Rome', code: 'RM' },
-        { name: 'London', code: 'LDN' },
-        { name: 'Istanbul', code: 'IST' },
-        { name: 'Paris', code: 'PRS' }
-    ];
+    useEffect(() => {
+        console.log('different item selected!');
+        console.log(JSON.stringify(selectedNeighbour));
 
+    }, [selectedNeighbour])
 
+    function handleNeighbourSelection(val) {
+        console.log('val is ' + val);
+        console.log('different item selected!');
+        console.log(val);
+        console.log('prev is: ' + selectedNeighbour);
+
+        setPrevSelectedNeighbour(selectedNeighbour);
+        setSelectedNeighbour(val);
+    }
 
 
     return (
@@ -59,9 +68,9 @@ function App() {
                 {submittedArticleTitle !== null && 
                     <SigmaContainer id='sigmaContainer' graph={DirectedGraph} settings={sigmaSettings}>
                         
-                        <WikipediaGraph rootNodeName={submittedArticleTitle} leftList={selectedLeftNodes} setLeftList={setSelectedLeftNodes} rightList={selectedRightNodes} setRightList={setSelectedRightNodes}></WikipediaGraph>
+                        <WikipediaGraph rootNodeName={submittedArticleTitle} leftList={selectedLeftNodes} setLeftList={setSelectedLeftNodes} rightList={selectedRightNodes} setRightList={setSelectedRightNodes} setClickedNodeNeighbours={setSelectedNodeNeighbours}></WikipediaGraph>
 
-                        <CurrentPath leftList={selectedLeftNodes} rightList={selectedRightNodes} ></CurrentPath>
+                        <CurrentPath leftList={selectedLeftNodes} rightList={selectedRightNodes} selectedNeighbour={selectedNeighbour} prevNeighbour={prevSelectedNeighbour}></CurrentPath>
                         
 
                     </SigmaContainer>
@@ -71,10 +80,17 @@ function App() {
 
             <div id='listView'>  
                 <h1>Neighbour List</h1>
-                <ListBox filter  value={selectedCity} onChange={(e) => setSelectedCity(e.value)} options={cities} optionLabel="name"  />
+                <ListBox filter  value={selectedNeighbour} onChange={(e) => handleNeighbourSelection(e.value)} options={selectedNodeNeighbours} optionLabel="label" emptyMessage="click a node to see its neighbours" />
             </div>
         </div>
     );
 }
 
 export default App;
+
+
+
+
+        
+
+        
