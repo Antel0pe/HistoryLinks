@@ -65,22 +65,27 @@ export class GraphAdjacentNodes{
         let currentColor = graph.getNodeAttribute(nodeNum, 'color');
         let absNodeLayer = Math.abs(nodeLayer);
 
+        this.deselectNephewNodesOnClick(selectedNodes, absNodeLayer, graph);
+
         // deselecting currently selected node
         if (currentColor === 'blue') {
             console.log('current color is blue so deselecting');
             graph.setNodeAttribute(nodeNum, 'color', 'red');
             
-            
+            setSelectedNodes([
+                ...selectedNodes.slice(0, absNodeLayer),
+            ]);
         } else {
             console.log('current color is not blue so doing normal');
-            this.deselectNephewNodesOnClick(selectedNodes, absNodeLayer, graph);
+            
             graph.setNodeAttribute(nodeNum, 'color', 'blue');
+
+            setSelectedNodes([
+                ...selectedNodes.slice(0, absNodeLayer),
+                nodeNum,
+            ]);
         }
 
-        setSelectedNodes([
-            ...selectedNodes.slice(0, absNodeLayer),
-            nodeNum,
-        ]);
     
     }
 
