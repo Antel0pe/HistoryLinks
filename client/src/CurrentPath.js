@@ -16,7 +16,7 @@ export default function CurrentPath({ leftList, rightList, selectedNeighbour, pr
         // console.log('num nodes ' + graph.order);
         // console.log('num edges ' + graph.size);
         let text = [...leftList].slice(1).reverse().concat(rightList)
-            .map((num) => graph.getNodeAttribute(num, 'label')).join(',');
+            .map((num) => graph.getNodeAttribute(num, 'label')).join(', ');
         setCurrentPathText(text);
 
     }, [leftList, rightList])
@@ -25,11 +25,11 @@ export default function CurrentPath({ leftList, rightList, selectedNeighbour, pr
         console.log('selected neighbours:');
         console.log(selectedNeighbour);
 
-        if (prevNeighbour !== null) {
+        if (prevNeighbour !== null && graph.hasNode(prevNeighbour.nodeNum)) {
             graph.removeNodeAttribute(prevNeighbour.nodeNum, "highlighted");
         }
         
-        if (selectedNeighbour !== null) {
+        if (selectedNeighbour !== null && graph.hasNode(selectedNeighbour.nodeNum)) {
             graph.setNodeAttribute(selectedNeighbour.nodeNum, "highlighted", true);
         }
         

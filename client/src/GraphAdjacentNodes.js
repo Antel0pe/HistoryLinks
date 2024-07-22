@@ -24,6 +24,23 @@ export class GraphAdjacentNodes{
         
     }
 
+    deleteNodeDescendants(graph, node) {
+        let inNeighbours = (n) => graph.inNeighbors(n);
+        let outNeighbours = (n) => graph.outNeighbors(n);
+
+        let getDescendants = node.layer < 0 ? inNeighbours : outNeighbours;
+        let deleteQueue = getDescendants(node.nodeNum);
+
+        while (deleteQueue.length !== 0) {
+            let removedNode = deleteQueue.shift();
+            let descendants = getDescendants(removedNode);
+            deleteQueue.push(...descendants);
+
+            graph.dropNode(removedNode);
+        }
+
+    }
+
     // when a user has selected a path on nodes 2, 4, 6 we highlight those nodes
     // when a user then clicks node 3 which is on the same level as node 2, we want to deselect 2, 4, 6
     // deselects sibling node as well
@@ -61,11 +78,29 @@ export class GraphAdjacentNodes{
 
     }
 
+    deselectPathToNode(graph, nodeNum, nodeLayer, selectedNodes) {
+        graph.setNodeAttribute(nodeNum, 'color', 'red');
+
+        // deselect edge connecting node in same layer to parent edge
+        let [source, target] = this.getSourceAndTargetNodeNumOfEdge(
+            graph.getNodeAttributes(selectedNodes[nodeLayer - 1]),
+            graph.getNodeAttributes(selectedNodes[nodeLayer])
+        )
+        graph.setEdgeAttribute(source, target, 'color', '#ccc');
+    }
+
     recordSelectedNode(graph, nodeNum, nodeLayer, [selectedNodes, setSelectedNodes]) {
         let currentColor = graph.getNodeAttribute(nodeNum, 'color');
         let absNodeLayer = Math.abs(nodeLayer);
 
-        this.deselectNephewNodesOnClick(selectedNodes, absNodeLayer, graph);
+        // this.deselectNephewNodesOnClick(selectedNodes, absNodeLayer, graph);
+        if (absNodeLayer < selectedNodes.length) {
+            console.log('doing spicy deleting');
+            console.log('node layer: ' + absNodeLayer + ' with path length ' + selectedNodes.length);
+            let nodeToDeleteUpTo = graph.getNodeAttributes(selectedNodes[absNodeLayer]);
+            this.deselectPathToNode(graph, nodeToDeleteUpTo.nodeNum, absNodeLayer, selectedNodes);
+            this.deleteNodeDescendants(graph, nodeToDeleteUpTo);
+        }
 
         // deselecting currently selected node
         if (currentColor === 'blue') {
@@ -123,6 +158,7 @@ export class GraphAdjacentNodes{
 
     async clickedNode(graph, nodeNum, [leftList, setLeftList], [rightList, setRightList]) {
         let node = graph.getNodeAttributes(nodeNum);
+        let nodeColor = node.color;
 
         if (!this.isLegalToSelectNode(graph, node, leftList, rightList)) {
             alert('invalid node to select!');
@@ -135,8 +171,13 @@ export class GraphAdjacentNodes{
             this.recordSelectedNode(graph, node.nodeNum, node.layer, [rightList, setRightList]);
         }
     
-        await this.generateAdjacentNodes(graph, node.nodeNum, node.x, node.label, node.layer);
-        this.colorEdgesSurroundingBlueNodes(graph, node.nodeNum);
+        // if on click the node was blue, this was deselecting the node
+        // in this case, don't generate adjacent nodes since this is not a selection
+        if (nodeColor !== 'blue') {
+            await this.generateAdjacentNodes(graph, node.nodeNum, node.x, node.label, node.layer);
+            this.colorEdgesSurroundingBlueNodes(graph, node.nodeNum);
+        }
+
     }
     
     async generateAdjacentNodes(graph, parentNodeNum, nodeX, label, layer) {
@@ -224,8 +265,8 @@ export class GraphAdjacentNodes{
     
     colorEdgesSurroundingBlueNodes(graph, nodeKey) {
         graph.filterEdges(nodeKey, (e, _, source, target, sourceAttributes, targetAttributes) => {
-            return (source === nodeKey && targetAttributes.color === 'blue') ||
-                (target === nodeKey && sourceAttributes.color === 'blue');
+            return (source === nodeKey.toString() && targetAttributes.color === 'blue') ||
+                (target === nodeKey.toString() && sourceAttributes.color === 'blue');
         }).forEach((e) => graph.setEdgeAttribute(e, 'color', 'blue'));
     }
     
