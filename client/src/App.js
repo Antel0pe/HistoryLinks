@@ -28,6 +28,7 @@ function App() {
     const [prevSelectedNeighbour, setPrevSelectedNeighbour] = useState(null);
     const [selectedNeighbour, setSelectedNeighbour] = useState(null);
     const [selectedNodeNeighbours, setSelectedNodeNeighbours] = useState([]);
+    const [inboundNeighbours, setInBoundNeighbours] = useState(true);
 
     const sigmaSettings = ({
         enableEdgeEvents: true,
@@ -68,7 +69,7 @@ function App() {
                 {submittedArticleTitle !== null && 
                     <SigmaContainer id='sigmaContainer' graph={DirectedGraph} settings={sigmaSettings}>
                         
-                        <WikipediaGraph rootNodeName={submittedArticleTitle} leftList={selectedLeftNodes} setLeftList={setSelectedLeftNodes} rightList={selectedRightNodes} setRightList={setSelectedRightNodes} setClickedNodeNeighbours={setSelectedNodeNeighbours}></WikipediaGraph>
+                        <WikipediaGraph rootNodeName={submittedArticleTitle} leftList={selectedLeftNodes} setLeftList={setSelectedLeftNodes} rightList={selectedRightNodes} setRightList={setSelectedRightNodes} setClickedNodeNeighbours={setSelectedNodeNeighbours} areNeighboursInBound={inboundNeighbours}></WikipediaGraph>
 
                         <CurrentPath leftList={selectedLeftNodes} rightList={selectedRightNodes} selectedNeighbour={selectedNeighbour} prevNeighbour={prevSelectedNeighbour}></CurrentPath>
                         
@@ -80,6 +81,8 @@ function App() {
 
             <div id='listView'>  
                 <h1>Neighbour List</h1>
+                <button disabled={inboundNeighbours} onClick={(e) => setInBoundNeighbours(!inboundNeighbours)}>Inbound</button>
+                <button disabled={!inboundNeighbours} onClick={(e) => setInBoundNeighbours(!inboundNeighbours)}>Outbound</button>
                 <ListBox filter  value={selectedNeighbour} onChange={(e) => handleNeighbourSelection(e.value)} options={selectedNodeNeighbours} optionLabel="label" emptyMessage="click a node to see its neighbours" />
             </div>
         </div>

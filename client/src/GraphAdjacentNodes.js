@@ -26,6 +26,7 @@ export class GraphAdjacentNodes{
 
     // when a user has selected a path on nodes 2, 4, 6 we highlight those nodes
     // when a user then clicks node 3 which is on the same level as node 2, we want to deselect 2, 4, 6
+    // deselects sibling node as well
     deselectNephewNodesOnClick(selectedNodes, idxToStartDeselecting, graph) {
         if (idxToStartDeselecting > selectedNodes.length) {
             return selectedNodes;
@@ -43,7 +44,11 @@ export class GraphAdjacentNodes{
             graph.setNodeAttribute(selectedNodes[i], 'color', 'red');
 
             // deselect edge to next node
-            graph.setEdgeAttribute(selectedNodes[i - 1], selectedNodes[i], 'color', '#ccc');
+            let [source, target] = this.getSourceAndTargetNodeNumOfEdge(
+                graph.getNodeAttributes(selectedNodes[i - 1]),
+                graph.getNodeAttributes(selectedNodes[i])
+            )
+            graph.setEdgeAttribute(source, target, 'color', '#ccc');
         }
 
         // console.log('idx after loop ' + i);
@@ -57,11 +62,21 @@ export class GraphAdjacentNodes{
     }
 
     recordSelectedNode(graph, nodeNum, nodeLayer, [selectedNodes, setSelectedNodes]) {
-        graph.setNodeAttribute(nodeNum, 'color', 'blue');
-    
+        let currentColor = graph.getNodeAttribute(nodeNum, 'color');
         let absNodeLayer = Math.abs(nodeLayer);
-    
-        this.deselectNephewNodesOnClick(selectedNodes, absNodeLayer, graph);
+
+        // deselecting currently selected node
+        if (currentColor === 'blue') {
+            console.log('current color is blue so deselecting');
+            graph.setNodeAttribute(nodeNum, 'color', 'red');
+            
+            
+        } else {
+            console.log('current color is not blue so doing normal');
+            this.deselectNephewNodesOnClick(selectedNodes, absNodeLayer, graph);
+            graph.setNodeAttribute(nodeNum, 'color', 'blue');
+        }
+
         setSelectedNodes([
             ...selectedNodes.slice(0, absNodeLayer),
             nodeNum,
@@ -89,7 +104,7 @@ export class GraphAdjacentNodes{
         if ((idx - 1) < selectedNodeList.length) {
             let prevNode = selectedNodeList[idx - 1];
             let prevNodeColor = graph.getNodeAttribute(prevNode, 'color');
-            let doesEdgeExistFromPrevLayer = graph.hasEdge(prevNode, node.nodeNum);
+            let doesEdgeExistFromPrevLayer = graph.areNeighbors(prevNode, node.nodeNum);
             
             console.log('is valid to select node? prev color: ' + prevNodeColor + ' and has edge to prev node: ' + doesEdgeExistFromPrevLayer);
             console.log('prev node is ' + prevNode);
@@ -115,11 +130,23 @@ export class GraphAdjacentNodes{
             this.recordSelectedNode(graph, node.nodeNum, node.layer, [rightList, setRightList]);
         }
     
-        await this.generateAdjacentNodes(graph, node.nodeNum, node.x, node.label);
+        await this.generateAdjacentNodes(graph, node.nodeNum, node.x, node.label, node.layer);
         this.colorEdgesSurroundingBlueNodes(graph, node.nodeNum);
     }
     
     async generateAdjacentNodes(graph, parentNodeNum, nodeX, label, layer) {
+
+        // if they already have neighbours, don't regenerate neighbours
+        if ((layer < 0 && graph.inNeighbors(parentNodeNum).length !== 0) ||
+            (layer > 0 && graph.outNeighbors(parentNodeNum).length !== 0)) {
+            console.log('skipping regeneration of nodes!');
+            return;
+        }
+
+        console.log('NOT skipping regeneration of nodes!');
+        console.log('layer: ' + layer);
+        console.log('in neighbours length: ' + graph.inNeighbors(parentNodeNum).length + ', out length: ' + graph.outNeighbors(parentNodeNum).length);
+
         let xCoordAdjustment = 0;
 
         if (nodeX < 0) {
@@ -173,12 +200,21 @@ export class GraphAdjacentNodes{
         for (let i = 0; i < adjacentNodes.length; i++) {
             graph.updateNode(adjacentNodes[i].nodeNum, attr => adjacentNodes[i]);
 
-            graph.updateEdge(parentNodeNum, adjacentNodes[i].nodeNum, attr => { 
+            // edge must be directed from left node to right node
+            let [source, target] = this.getSourceAndTargetNodeNumOfEdge(node, adjacentNodes[i]);
+            graph.updateEdge(source, target, attr => { 
                 return {
                     color: attr.color ? attr.color : 'grey'
                 }
             });
         }
+    }
+
+    getSourceAndTargetNodeNumOfEdge(node1, node2) {
+        let source = node1.x < node2.x ? node1.nodeNum : node2.nodeNum;
+        let target = node1.x > node2.x ? node1.nodeNum : node2.nodeNum;
+
+        return [source, target];
     }
     
     colorEdgesSurroundingBlueNodes(graph, nodeKey) {

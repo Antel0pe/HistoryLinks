@@ -4,7 +4,7 @@ import { GraphAdjacentNodes } from "./GraphAdjacentNodes";
 import { DirectedGraph } from "graphology";
 
 
-export default function WikipediaGraph({ rootNodeName, leftList, setLeftList, rightList, setRightList, setClickedNodeNeighbours }) {
+export default function WikipediaGraph({ rootNodeName, leftList, setLeftList, rightList, setRightList, setClickedNodeNeighbours, areNeighboursInBound }) {
     // createGraphNodes();
 
     const registerEvents = useRegisterEvents();
@@ -12,6 +12,7 @@ export default function WikipediaGraph({ rootNodeName, leftList, setLeftList, ri
     let graph = sigma.getGraph();
 
     const [graphNodes, setGraphNodes] = useState(new GraphAdjacentNodes());
+    const [lastClickedNode, setLastClickedNode] = useState(0);
 
 
     // let graphNodes = new GraphAdjacentNodes();
@@ -32,30 +33,50 @@ export default function WikipediaGraph({ rootNodeName, leftList, setLeftList, ri
         
     }, []);
 
-    async function onNodeClick(node) {
-        await graphNodes.clickedNode(graph, node, [leftList, setLeftList], [rightList, setRightList]);
+    useEffect(() => {
+        console.log('neighbours in bound changed, now: ' + areNeighboursInBound);
+        
+        let neighbours = collectNodeNeighbours();
+        setClickedNodeNeighbours(neighbours);
+    }, [areNeighboursInBound])
 
-        console.log('clicked node neighbours are: ');
+    useEffect(() => {
+        console.log('last clicked node changed');
 
+        let neighbours = collectNodeNeighbours();
+        setClickedNodeNeighbours(neighbours);
+    }, [lastClickedNode])
+
+    function collectNodeNeighbours() {
         let neighbours = [];
-        if (node.x <= 0) {
+        console.log('clicked node neighbours are: ');      
+
+        if (areNeighboursInBound) {
             console.log('looking at inbound');
-            neighbours = graph.reduceInNeighbors(node, (acc, neighbour, attr) => {
+            neighbours = graph.reduceInNeighbors(lastClickedNode, (acc, neighbour, attr) => {
                 acc.push(attr);
                 return acc;
             }, []);
         } else {
             console.log('looking at outbound');
 
-            neighbours = graph.reduceOutNeighbors(node, (acc, neighbour, attr) => {
+            neighbours = graph.reduceOutNeighbors(lastClickedNode, (acc, neighbour, attr) => {
                 acc.push(attr);
                 return acc;
             }, []);
         }
 
-        setClickedNodeNeighbours(neighbours);
-        console.log(graph.neighbors(node));
         console.log(neighbours);
+
+        return neighbours;
+    }
+
+    async function onNodeClick(node) {
+        // remove highlight if highlighted
+        graph.removeNodeAttribute(node, "highlighted");
+
+        await graphNodes.clickedNode(graph, node, [leftList, setLeftList], [rightList, setRightList]);  
+        setLastClickedNode(node);
     }
     
   
