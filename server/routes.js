@@ -27,8 +27,6 @@ router.get("/outlinks/:articleTitle", async (req, res) => {
         
     outlinks = outlinks === null ? [] : outlinks.linked_article_titles;
 
-    console.log('found outlinks:' + JSON.stringify(outlinks));
-
     outlinks = tempPadOutValues(outlinks);
     
     res.send(outlinks);
@@ -45,8 +43,6 @@ router.get("/inlinks/:articleTitle", async (req, res) => {
     
     inlinks = inlinks.map(a => a.title);
          
-    console.log('found ' + inlinks);
-
     inlinks = tempPadOutValues(inlinks);
     
     res.send(inlinks);
