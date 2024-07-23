@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import Graph from "graphology";
 import Sigma from "sigma";
-import { FullScreenControl, SigmaContainer, ZoomControl } from "@react-sigma/core";
+import { FullScreenControl, SigmaContainer, ZoomControl, SearchControl, ControlsContainer } from "@react-sigma/core";
 import { createNodeImageProgram } from "@sigma/node-image";
 import { FC, useEffect, useMemo, useState } from "react";
 import { DirectedGraph } from "graphology"; 
@@ -68,6 +68,11 @@ function App() {
 
                 {submittedArticleTitle !== null && 
                     <SigmaContainer id='sigmaContainer' graph={DirectedGraph} settings={sigmaSettings}>
+                        <ControlsContainer position={"top-left"}>
+                            <ZoomControl />
+                            <FullScreenControl />
+                            <SearchControl />
+                        </ControlsContainer>
                         
                         <WikipediaGraph rootNodeName={submittedArticleTitle} leftList={selectedLeftNodes} setLeftList={setSelectedLeftNodes} rightList={selectedRightNodes} setRightList={setSelectedRightNodes} setClickedNodeNeighbours={setSelectedNodeNeighbours} areNeighboursInBound={inboundNeighbours}></WikipediaGraph>
 
