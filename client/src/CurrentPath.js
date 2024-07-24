@@ -37,8 +37,10 @@ export default function CurrentPath({ leftList, rightList, selectedNeighbour, pr
     }, [selectedNeighbour])
 
     return <>
-        <p>Current Path:</p>
-        <p>{currentPathText}</p>
+        <div id='currentPath'>
+            <p>Current Path:</p>
+            <p>{currentPathText}</p>
+        </div>
     </>
 
 

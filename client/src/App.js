@@ -61,10 +61,11 @@ function App() {
 
     return (
         <div id='page'>
-            <div id='container'>
-                <Analytics />
+            <Analytics />
 
-                <UserInput handleSubmittedUserArticle={handleSubmittedUserArticle}></UserInput>
+            <UserInput handleSubmittedUserArticle={handleSubmittedUserArticle}></UserInput>
+            
+            <div id='container'>
 
                 {submittedArticleTitle !== null && 
                     <SigmaContainer id='sigmaContainer' graph={DirectedGraph} settings={sigmaSettings}>
@@ -88,7 +89,7 @@ function App() {
                 <h1>Neighbour List</h1>
                 <button disabled={inboundNeighbours} onClick={(e) => setInBoundNeighbours(!inboundNeighbours)}>Inbound</button>
                 <button disabled={!inboundNeighbours} onClick={(e) => setInBoundNeighbours(!inboundNeighbours)}>Outbound</button>
-                <ListBox filter  value={selectedNeighbour} onChange={(e) => handleNeighbourSelection(e.value)} options={selectedNodeNeighbours} optionLabel="label" emptyMessage="click a node to see its neighbours" />
+                <ListBox filter pt={{display:'none'}} value={selectedNeighbour} onChange={(e) => handleNeighbourSelection(e.value)} options={selectedNodeNeighbours} optionLabel="label" emptyMessage="click a node to see its neighbours" />
             </div>
         </div>
     );

@@ -1,37 +1,43 @@
 #root {
     background-color: #0B0C10;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     color: #C5C6C7;
   }
 
 #instructions{
     text-align: center;
+    float: left;
+    margin-left: 20%;
 }
 
 #sigmaContainer{
-    margin: 2.5%;
+    margin-top: 2.5%;
     border: solid 5px #45A29E;
-    width: 75vw; 
+    width: 100%; 
     height: 60vh;
+}
+
+#page{
 }
 
 #container{
     float:left;
+    width: 80%;
 }
 
 #listView{
-    width:250px;
-    float:right;
+    width:20%;
     position: absolute;
-    right: 1%;
+    right: 0%;
     background-color: #1F2833;
     border-left: solid 5px #45A29E;
-    margin: 0.5%;
-    height: 99%;
-    color: #66FCF1  ;
+    height: 100%;
+    color: #66FCF1;
+    text-align: center;
+}
+
+#currentPath{
+    text-align: center;
 }
 
 
