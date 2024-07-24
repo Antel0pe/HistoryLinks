@@ -1,6 +1,5 @@
 #root {
     background-color: #0B0C10;
-    min-height: 100vh;
     color: #C5C6C7;
   }
 
@@ -17,7 +16,8 @@
     height: 60vh;
 }
 
-#page{
+.p-icon {
+    display: none;
 }
 
 #container{
@@ -31,16 +31,27 @@
     right: 0%;
     background-color: #1F2833;
     border-left: solid 5px #45A29E;
-    height: 100%;
     color: #66FCF1;
     text-align: center;
+    height: 100%;
 }
 
 #currentPath{
     text-align: center;
 }
 
+html, body, #root, #page{
+    height: 100%;
+}
 
+.p-listbox {
+    height: 80%;
+}
+
+.p-listbox-list-wrapper{
+    height: 100%;
+    margin-top: 5%;
+}
 
 
 
