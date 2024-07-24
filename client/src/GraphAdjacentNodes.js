@@ -180,7 +180,7 @@ export class GraphAdjacentNodes{
 
     }
     
-    async generateAdjacentNodes(graph, parentNodeNum, nodeX, label, layer) {
+    async generateAdjacentNodes(graph, parentNodeNum, nodeX, rawTextLabel, layer) {
 
         // if they already have neighbours, don't regenerate neighbours
         if ((layer < 0 && graph.inNeighbors(parentNodeNum).length !== 0) ||
@@ -194,6 +194,7 @@ export class GraphAdjacentNodes{
         console.log('in neighbours length: ' + graph.inNeighbors(parentNodeNum).length + ', out length: ' + graph.outNeighbors(parentNodeNum).length);
 
         let xCoordAdjustment = 0;
+        let label = encodeURIComponent(rawTextLabel);
 
         if (nodeX < 0) {
             xCoordAdjustment = -1;
