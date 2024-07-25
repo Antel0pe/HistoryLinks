@@ -4,7 +4,7 @@ import { Autocomplete, TextField } from "@mui/material";
  
 
 export default function UserInput({ handleSubmittedUserArticle }) {
-    const [suggestedArticleTitles, setSuggestedArticleTitles] = useState([]);
+    const [suggestedArticleTitles, setSuggestedArticleTitles] = useState(['Appian Way']);
 
     function updateAutocompleteOptions(e){
         let userArticleTitle = e.target.value;
@@ -37,7 +37,7 @@ export default function UserInput({ handleSubmittedUserArticle }) {
                 onInputChange={(e) => updateAutocompleteOptions(e)}
                 onChange={(e) => handleSubmittedUserArticle(e)}
                 isOptionEqualToValue={(option, value) => true}
-                sx={{ width: 300, backgroundColor: "white" }}
+                sx={{ width: 300, backgroundColor: "white",  margin: "auto" }}
                 renderInput={(params) => <TextField {...params} label="Enter a Wikipedia article title" />}
                 />
         </div>
