@@ -36,10 +36,9 @@ function App() {
         itemSizesReference: "positions",
     });
 
-    function handleSubmittedUserArticle(title) {
-        console.log('submitted ' + title);
-        setSubmittedArticleTitle(title);
-
+    function handleSubmittedUserArticle(e) {
+        console.log('submitted ' + e.target.textContent);
+        setSubmittedArticleTitle(e.target.textContent);
     }
 
     useEffect(() => {

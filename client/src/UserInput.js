@@ -1,12 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { prefixSearch } from "./apis/wikipedia";
+import { Autocomplete, TextField } from "@mui/material";
+ 
 
+export default function UserInput({ handleSubmittedUserArticle }) {
+    const [suggestedArticleTitles, setSuggestedArticleTitles] = useState([]);
 
-export default function UserInput({handleSubmittedUserArticle}) {
-    const [userArticleTitle, setUserArticleTitle] = useState(null);
+    function updateAutocompleteOptions(e){
+        let userArticleTitle = e.target.value;
 
-    function handleChange(e) {
-        setUserArticleTitle(e.target.value);
+        prefixSearch(userArticleTitle, 10)
+            .then((res) => {
+                console.log(res);
+                if (!res.data.error) {
+                    console.log(res.data.query.prefixsearch.map((t) => t.title));
+                    setSuggestedArticleTitles(res.data.query.prefixsearch.map((t) => t.title));    
+                }
+            })
+        
     }
+
+
+    
+
 
 
 
@@ -14,8 +30,16 @@ export default function UserInput({handleSubmittedUserArticle}) {
         <div id='instructions'>
             <h3 id='heading'>HistoryLinks</h3>
             <p>Explore how a wikipedia page about history is linked to/by other history articles on wikipedia</p>
-            <input id='userInputArticle' onChange={(e) => handleChange(e)} placeholder='Enter the name of a wikipedia history article' size={40}></input>
-            <button id='button' onClick={() => handleSubmittedUserArticle(userArticleTitle)}>Explore!</button>
+            <Autocomplete
+                disablePortal
+                id='userInputArticle'
+                options={suggestedArticleTitles}
+                onInputChange={(e) => updateAutocompleteOptions(e)}
+                onChange={(e) => handleSubmittedUserArticle(e)}
+                isOptionEqualToValue={(option, value) => true}
+                sx={{ width: 300, backgroundColor: "white" }}
+                renderInput={(params) => <TextField {...params} label="Enter a Wikipedia article title" />}
+                />
         </div>
     </>
 }

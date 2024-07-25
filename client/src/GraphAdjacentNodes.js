@@ -2,6 +2,7 @@ import './App.css';
 import _ from 'underscore';
 import newGraphNode from './GraphNode';
 import axios from "axios";
+import { getInLinks, getOutLinks } from './apis/backend';
 
 
 export class GraphAdjacentNodes{
@@ -196,21 +197,32 @@ export class GraphAdjacentNodes{
         let xCoordAdjustment = 0;
         let label = encodeURIComponent(rawTextLabel);
 
+        let response;
+
         if (nodeX < 0) {
             xCoordAdjustment = -1;
 
-            await axios.get(process.env.REACT_APP_BACKEND_URL + '/api/inlinks/' + label)
-                .then(res => {
-                    this.generateAdjacentNodesWithXCoord(graph, parentNodeNum, xCoordAdjustment, res.data);
-                });
+            response = getInLinks(label);
+
+            // await axios.get(process.env.REACT_APP_BACKEND_URL + '/api/inlinks/' + label)
+            //     .then(res => {
+            //         this.generateAdjacentNodesWithXCoord(graph, parentNodeNum, xCoordAdjustment, res.data);
+            //     });
         } else if (nodeX > 0) {
             xCoordAdjustment = 1;
+            response = getOutLinks(label);
 
-            await axios.get(process.env.REACT_APP_BACKEND_URL + '/api/outlinks/' + label)
-                .then(res => {
-                    this.generateAdjacentNodesWithXCoord(graph, parentNodeNum, xCoordAdjustment, res.data);
-                });
+            // await axios.get(process.env.REACT_APP_BACKEND_URL + '/api/outlinks/' + label)
+            //     .then(res => {
+            //         this.generateAdjacentNodesWithXCoord(graph, parentNodeNum, xCoordAdjustment, res.data);
+            //     });
         }
+
+        console.log('received response ' + response.data);
+        response.then((res) => {
+            this.generateAdjacentNodesWithXCoord(graph, parentNodeNum, xCoordAdjustment, res.data);
+        });
+         
 
     }
 
