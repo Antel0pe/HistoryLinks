@@ -8,7 +8,7 @@ import { getInLinks, getOutLinks } from './apis/backend';
 export class GraphAdjacentNodes{
     graphNodeNum = 0;
 
-    resetGraphNodeNum() {
+    reset() {
         this.graphNodeNum = 0;
     }
 
@@ -218,10 +218,11 @@ export class GraphAdjacentNodes{
             //     });
         }
 
-        console.log('received response ' + response.data);
         response.then((res) => {
+            console.log('received response ' + res.data.length);
             this.generateAdjacentNodesWithXCoord(graph, parentNodeNum, xCoordAdjustment, res.data);
-        });
+        })
+            .catch((err) => console.log(err));
          
 
     }

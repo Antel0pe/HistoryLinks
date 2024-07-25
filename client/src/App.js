@@ -88,7 +88,7 @@ function App() {
                 <h1>Neighbour List</h1>
                 <button disabled={inboundNeighbours} onClick={(e) => setInBoundNeighbours(!inboundNeighbours)}>Inbound</button>
                 <button disabled={!inboundNeighbours} onClick={(e) => setInBoundNeighbours(!inboundNeighbours)}>Outbound</button>
-                <ListBox filter pt={{display:'none'}} value={selectedNeighbour} onChange={(e) => handleNeighbourSelection(e.value)} options={selectedNodeNeighbours} optionLabel="label" emptyMessage="click a node to see its neighbours" listStyle={{ maxHeight: '100vh' }} />
+                <ListBox filter pt={{ display: 'none' }} value={selectedNeighbour} onChange={(e) => handleNeighbourSelection(e.value)} options={selectedNodeNeighbours} optionLabel="label" emptyMessage="click a node to see its neighbours" listStyle={{ maxHeight: '100vh' }} />
             </div>
         </div>
     );

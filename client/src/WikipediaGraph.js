@@ -5,13 +5,12 @@ import { DirectedGraph } from "graphology";
 
 
 export default function WikipediaGraph({ rootNodeName, leftList, setLeftList, rightList, setRightList, setClickedNodeNeighbours, areNeighboursInBound }) {
-    // createGraphNodes();
 
     const registerEvents = useRegisterEvents();
     const sigma = useSigma();
     let graph = sigma.getGraph();
 
-    const [graphNodes, setGraphNodes] = useState(new GraphAdjacentNodes());
+    let graphNodes = new GraphAdjacentNodes()
     const [lastClickedNode, setLastClickedNode] = useState(0);
 
 
@@ -21,17 +20,17 @@ export default function WikipediaGraph({ rootNodeName, leftList, setLeftList, ri
         // Create the graph
         console.log('creating on mount');
         // let rootNode = newGraphNode(rootNodeName, graphNodeNum++, 0, 0, 10, 'blue');
-        // graph.addNode(rootNode.nodeNum, rootNode);
+        // graph.addNode(rootNo(de.nodeNum, rootNode);
         sigma.setGraph(new DirectedGraph());
         graph = sigma.getGraph();
-        graphNodes.resetGraphNodeNum();
+        graphNodes.reset();
 
         setLeftList([rootNodeName]);
         setRightList([rootNodeName]);
 
         graphNodes.createRootNode(graph, rootNodeName, setLeftList, setRightList);
         
-    }, []);
+    }, [rootNodeName]);
 
     useEffect(() => {
         console.log('neighbours in bound changed, now: ' + areNeighboursInBound);
@@ -51,20 +50,20 @@ export default function WikipediaGraph({ rootNodeName, leftList, setLeftList, ri
         let neighbours = [];
         console.log('clicked node neighbours are: ');      
 
-        if (areNeighboursInBound) {
-            console.log('looking at inbound');
-            neighbours = graph.reduceInNeighbors(lastClickedNode, (acc, neighbour, attr) => {
-                acc.push(attr);
-                return acc;
-            }, []);
-        } else {
-            console.log('looking at outbound');
+        // if (areNeighboursInBound) {
+        //     console.log('looking at inbound');
+        //     neighbours = graph.reduceInNeighbors(lastClickedNode, (acc, neighbour, attr) => {
+        //         acc.push(attr);
+        //         return acc;
+        //     }, []);
+        // } else {
+        //     console.log('looking at outbound');
 
-            neighbours = graph.reduceOutNeighbors(lastClickedNode, (acc, neighbour, attr) => {
-                acc.push(attr);
-                return acc;
-            }, []);
-        }
+        //     neighbours = graph.reduceOutNeighbors(lastClickedNode, (acc, neighbour, attr) => {
+        //         acc.push(attr);
+        //         return acc;
+        //     }, []);
+        // }
 
         console.log(neighbours);
 
