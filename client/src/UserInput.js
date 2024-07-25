@@ -11,19 +11,12 @@ export default function UserInput({ handleSubmittedUserArticle }) {
 
         prefixSearch(userArticleTitle, 10)
             .then((res) => {
-                console.log(res);
                 if (!res.data.error) {
-                    console.log(res.data.query.prefixsearch.map((t) => t.title));
                     setSuggestedArticleTitles(res.data.query.prefixsearch.map((t) => t.title));    
                 }
             })
         
     }
-
-
-    
-
-
 
 
     return <>

@@ -37,22 +37,10 @@ function App() {
     });
 
     function handleSubmittedUserArticle(e) {
-        console.log('submitted ' + e.target.textContent);
         setSubmittedArticleTitle(e.target.textContent);
     }
 
-    useEffect(() => {
-        console.log('different item selected!');
-        console.log(JSON.stringify(selectedNeighbour));
-
-    }, [selectedNeighbour])
-
     function handleNeighbourSelection(val) {
-        console.log('val is ' + val);
-        console.log('different item selected!');
-        console.log(val);
-        console.log('prev is: ' + selectedNeighbour);
-
         setPrevSelectedNeighbour(selectedNeighbour);
         setSelectedNeighbour(val);
     }

@@ -8,14 +8,13 @@ import { getInLinks, getOutLinks } from './apis/backend';
 export class GraphAdjacentNodes{
     graphNodeNum = 0;
 
-    reset() {
+    resetGraphNodeNum() {
         this.graphNodeNum = 0;
     }
 
     createRootNode(graph, articleTitle, setSelectedLeftNodes, setSelectedRightNodes) {
         let rootNode = newGraphNode(articleTitle, this.graphNodeNum++, 0, 0, 10, 'blue', 0);
         graph.updateNode(rootNode.nodeNum, attr => rootNode);
-        console.log('added node ' + rootNode.nodeNum);
     
         setSelectedLeftNodes([rootNode.nodeNum]);
         setSelectedRightNodes([rootNode.nodeNum]);
@@ -50,14 +49,8 @@ export class GraphAdjacentNodes{
             return selectedNodes;
         }
 
-        console.log('deselecting nephew nodes');
-        console.log(selectedNodes);
-        console.log(idxToStartDeselecting);
         let i = null;
         for (i = selectedNodes.length - 1; i >= idxToStartDeselecting;  i--){
-            console.log('deselecting node @ idx ' + i);
-            console.log(i > idxToStartDeselecting);
-
             // deselect node
             graph.setNodeAttribute(selectedNodes[i], 'color', 'red');
 
@@ -68,14 +61,6 @@ export class GraphAdjacentNodes{
             )
             graph.setEdgeAttribute(source, target, 'color', '#ccc');
         }
-
-        // console.log('idx after loop ' + i);
-        // console.log(0 <= i);
-        // console.log(i < selectedNodes.length)
-        // // deselect remaining node in list
-        // if (0 <= idxToStartDeselecting && idxToStartDeselecting < selectedNodes.length) {
-        //     graph.setNodeAttribute(selectedNodes[idxToStartDeselecting], 'color', 'red');
-        // }
 
     }
 
@@ -96,8 +81,6 @@ export class GraphAdjacentNodes{
 
         // this.deselectNephewNodesOnClick(selectedNodes, absNodeLayer, graph);
         if (absNodeLayer < selectedNodes.length) {
-            console.log('doing spicy deleting');
-            console.log('node layer: ' + absNodeLayer + ' with path length ' + selectedNodes.length);
             let nodeToDeleteUpTo = graph.getNodeAttributes(selectedNodes[absNodeLayer]);
             this.deselectPathToNode(graph, nodeToDeleteUpTo.nodeNum, absNodeLayer, selectedNodes);
             this.deleteNodeDescendants(graph, nodeToDeleteUpTo);
@@ -105,15 +88,12 @@ export class GraphAdjacentNodes{
 
         // deselecting currently selected node
         if (currentColor === 'blue') {
-            console.log('current color is blue so deselecting');
             graph.setNodeAttribute(nodeNum, 'color', 'red');
             
             setSelectedNodes([
                 ...selectedNodes.slice(0, absNodeLayer),
             ]);
         } else {
-            console.log('current color is not blue so doing normal');
-            
             graph.setNodeAttribute(nodeNum, 'color', 'blue');
 
             setSelectedNodes([
@@ -136,9 +116,6 @@ export class GraphAdjacentNodes{
         } else if (node.x < 0) {
             selectedNodeList = leftList;
         }
-        console.log('node layer is ' + node.layer);
-        console.log(selectedNodeList);
-        console.log('length of list: ' + selectedNodeList.length);
 
         let idx = Math.abs(node.layer);
 
@@ -147,12 +124,8 @@ export class GraphAdjacentNodes{
             let prevNodeColor = graph.getNodeAttribute(prevNode, 'color');
             let doesEdgeExistFromPrevLayer = graph.areNeighbors(prevNode, node.nodeNum);
             
-            console.log('is valid to select node? prev color: ' + prevNodeColor + ' and has edge to prev node: ' + doesEdgeExistFromPrevLayer);
-            console.log('prev node is ' + prevNode);
-
             return prevNodeColor === 'blue' && doesEdgeExistFromPrevLayer;
         } else {
-            console.log('goofy if');
             return false;
         }
     }
@@ -186,13 +159,8 @@ export class GraphAdjacentNodes{
         // if they already have neighbours, don't regenerate neighbours
         if ((layer < 0 && graph.inNeighbors(parentNodeNum).length !== 0) ||
             (layer > 0 && graph.outNeighbors(parentNodeNum).length !== 0)) {
-            console.log('skipping regeneration of nodes!');
             return;
         }
-
-        console.log('NOT skipping regeneration of nodes!');
-        console.log('layer: ' + layer);
-        console.log('in neighbours length: ' + graph.inNeighbors(parentNodeNum).length + ', out length: ' + graph.outNeighbors(parentNodeNum).length);
 
         let xCoordAdjustment = 0;
         let label = encodeURIComponent(rawTextLabel);
@@ -201,25 +169,13 @@ export class GraphAdjacentNodes{
 
         if (nodeX < 0) {
             xCoordAdjustment = -1;
-
             response = getInLinks(label);
-
-            // await axios.get(process.env.REACT_APP_BACKEND_URL + '/api/inlinks/' + label)
-            //     .then(res => {
-            //         this.generateAdjacentNodesWithXCoord(graph, parentNodeNum, xCoordAdjustment, res.data);
-            //     });
         } else if (nodeX > 0) {
             xCoordAdjustment = 1;
             response = getOutLinks(label);
-
-            // await axios.get(process.env.REACT_APP_BACKEND_URL + '/api/outlinks/' + label)
-            //     .then(res => {
-            //         this.generateAdjacentNodesWithXCoord(graph, parentNodeNum, xCoordAdjustment, res.data);
-            //     });
         }
 
         response.then((res) => {
-            console.log('received response ' + res.data.length);
             this.generateAdjacentNodesWithXCoord(graph, parentNodeNum, xCoordAdjustment, res.data);
         })
             .catch((err) => console.log(err));
@@ -232,11 +188,7 @@ export class GraphAdjacentNodes{
         let max = 15;
 
         let size = (0.1*arrLength)/(0.1*arrLength + 100)
-
         let normalization = (val) => val * (max-min) + min;
-
-        console.log('SIZE OF NODES: ' + normalization(size));
-
         return normalization(size, min, max);
     }
     
@@ -251,6 +203,7 @@ export class GraphAdjacentNodes{
         let layer = node.layer + xCoordAdjustment;
 
         for (let i = 0; i < adjacentNodeNames.length; i++){
+
             let newNode = newGraphNode(adjacentNodeNames[i], this.graphNodeNum++, adjacentX, adjacentY - i*10, nodeSize, 'red', layer);
 
             adjacentNodes.push(newNode);
@@ -258,6 +211,10 @@ export class GraphAdjacentNodes{
     
     
         for (let i = 0; i < adjacentNodes.length; i++) {
+            if (adjacentNodes[i].nodeNum == 0) {
+                console.log('updating root');
+            }
+
             graph.updateNode(adjacentNodes[i].nodeNum, attr => adjacentNodes[i]);
 
             // edge must be directed from left node to right node
@@ -284,15 +241,5 @@ export class GraphAdjacentNodes{
         }).forEach((e) => graph.setEdgeAttribute(e, 'color', 'blue'));
     }
     
-    getAdjacentNodeNames() {
-        let randomList = ['ancient greece', 'persia', 'roman empire', 'nubia', 'mesopotamia', 'zhou dynasty', 'hittites', 'ancient egypt', 'aztecs', 'vedic civilizations', 'carthage', 'indus valley'];
-    
-        let random_sample = _.sample(randomList, 3);
-    
-        return random_sample;
-        // return ['', '', ''];
-    }
-    
-
 }
 
