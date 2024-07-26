@@ -7,7 +7,7 @@ export default function UserInput({ handleSubmittedUserArticle }) {
     const [suggestedArticleTitles, setSuggestedArticleTitles] = useState(['Appian Way']);
 
     function updateAutocompleteOptions(e){
-        let userArticleTitle = e.target.value;
+        let userArticleTitle = encodeURIComponent(e.target.value);
 
         prefixSearch(userArticleTitle, 10)
             .then((res) => {

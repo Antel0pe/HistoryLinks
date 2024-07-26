@@ -7,7 +7,7 @@ export const prefixSearch = async (title, limit) => {
         action: 'query',
         format: 'json',
         list: 'prefixsearch',
-        pssearch: encodeURIComponent(title),
+        pssearch: title,
         pslimit: limit,
     }
 
