@@ -198,8 +198,10 @@ export class GraphAdjacentNodes{
         let adjacentNodes = [];
     
         let adjacentX = node.x + xCoordAdjustment*adjacentNodeNames.length*10;
+        // let adjacentY = node.y + Math.floor(adjacentNodeNames.length / 2) * 10;
+        // let nodeSize = this.normalizeSize(adjacentNodeNames.length);
         let adjacentY = node.y + Math.floor(adjacentNodeNames.length / 2) * 10;
-        let nodeSize = this.normalizeSize(adjacentNodeNames.length);
+        let nodeSize = 1;
         let layer = node.layer + xCoordAdjustment;
 
         for (let i = 0; i < adjacentNodeNames.length; i++){

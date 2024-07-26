@@ -33,7 +33,7 @@ function App() {
     const sigmaSettings = ({
         enableEdgeEvents: true,
         allowInvalidContainer: true,
-        itemSizesReference: "positions",
+        // itemSizesReference: "positions",
     });
 
     function handleSubmittedUserArticle(e) {
